@@ -29,6 +29,7 @@ class Strategy(db.Model):
 class AttrCh(db.Model):
     __tablename__ = 'attr_ch'
     id = db.Column(db.Integer, primary_key=True)
+    strategy_index = db.Column(db.String(255))
     fg_pct = db.Column(db.FLOAT)
     three_pt_pct = db.Column(db.FLOAT)
     fta_pct = db.Column(db.FLOAT)
@@ -40,10 +41,10 @@ class AttrCh(db.Model):
     blk_pct = db.Column(db.FLOAT)
     pf_pct = db.Column(db.FLOAT)
 
-    def __init__(self,fg_pct,three_pt_pct,fta_pct,oreb_pct,dreb_pct,ast_pct,tov_pct,stl_pct,blk_pct,pf_pct):
-        (self.fg_pct,self.three_pt_pct,self.fta_pct,self.oreb_pct,self.dreb_pct,self.ast_pct,self.tov_pct,self.stl_pct,
-         self.blk_pct,self.pf_pct ) =(fg_pct, three_pt_pct, fta_pct, oreb_pct, dreb_pct, ast_pct, tov_pct, stl_pct,
-                                      blk_pct, pf_pct )
+    def __init__(self, strategy_index, fg_pct, three_pt_pct, fta_pct, oreb_pct, dreb_pct, ast_pct, tov_pct, stl_pct, blk_pct, pf_pct):
+        (self.fg_pct, self.three_pt_pct, self.fta_pct, self.oreb_pct, self.dreb_pct, self.ast_pct, self.tov_pct, self.stl_pct,
+         self.blk_pct, self.pf_pct) = (fg_pct, three_pt_pct, fta_pct, oreb_pct, dreb_pct, ast_pct, tov_pct, stl_pct,
+                                      blk_pct, pf_pct)
 
     def __repr__(self):
         return "<Strategy %r>" % self.id

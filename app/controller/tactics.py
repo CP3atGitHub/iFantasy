@@ -40,7 +40,8 @@ class Offense_strategy_IndexAPi(Resource):
 
 class Offense_StrategyAPi(Resource):
     def get(self, attr_id):
-        data = AttrCh.query.filter_by(id = attr_id).all()
+        data = AttrCh.query.filter_by(id=attr_id).all()
+
         result =[]
         for random in data:
             random_data = {}
@@ -54,15 +55,6 @@ class Offense_StrategyAPi(Resource):
 
         return {'data': result}
 
-        # if pg.3pt or sg.3pt or sf.3pt > 35% :
-        #     offense_strategy_outside_1
-        #     if pg.3pt >= 35% :
-        #         pg.3pt += 3%
-        #     if sg.3pt >= 35% :
-        #         sg.3pt += 3%
-        #     if sf.3pt >= 35% :
-        #         sf.3pt += 3%
-
 
 
 class Defense_Strategy_IndexAPi(Resource):
@@ -71,7 +63,7 @@ class Defense_Strategy_IndexAPi(Resource):
 
 class Defense_StrategyAPi(Resource):
     def get(self, strategy_id):
-        data = Strategy.query.filter_by(id = strategy_id).all()
+        data = Strategy.query.filter_by(id=strategy_id).all( )
         result = []
         for random in data:
             random_data = {}

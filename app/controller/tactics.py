@@ -34,17 +34,6 @@ DEFENSE_STRATEGY = {
 }
 
 
-#strategy_1:pg||sg||sf(who > 35%) three_pt_pct up 3%
-#strategy_2:pg||sf fg_pct up 2%
-#strategy_3:sg||sf fg_pct_up 2%   three_pt_pct up 3%
-#strategy_4:pf||c fg_pct up 2%
-#strategy_5:pf&&c fg_pct up 3%
-#strategy_6:sg||sf fg_pct up 2%
-#strategy_7:pg&&sg&&sf&&pf&&c fg_pct up 1%
-#strategy_8:pg&&sg&&sf stl_pct 3%
-#strategy_9:pg&&sg||pg&&sf||sg&&sf stl_pct up 5%
-#strategy_10:
-
 
 
 class Offense_strategy_IndexAPi(Resource):

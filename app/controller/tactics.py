@@ -1,6 +1,7 @@
 from flask import Blueprint
 
 from flask_restful import Api, Resource,reqparse
+from app import db
 from app.model.tactics import OStrategy,AttrCh, DStrategy
 
 tactics_bp = Blueprint("tactics_bp", __name__)
@@ -41,52 +42,23 @@ class Offense_strategy_IndexAPi(Resource):
         return OFFENSE_STRATEGY[key]
 
 
-class Offense_StrategyAPi(Resource):
-
-    def get(self, attr_id):
-        data = AttrCh.query.filter_by(id=attr_id).all()
-
-
-        result =[]
-        for random in data:
-            random_data = {}
-            random_data['pg_id'] = random.pg_id
-            random_data['sg_id'] = random.sg_id
-            random_data['sf_id'] = random.sf_id
-            random_data['pf_id'] = random.pf_id
-            random_data['c_id'] = random.c_id
-
-            result.append(random_data)
-
-        return {'data': result}
-
-
-
 class Defense_Strategy_IndexAPi(Resource):
     def get(self, key):
         return DEFENSE_STRATEGY[key]
 
-class Defense_StrategyAPi(Resource):
 
-    def get(self, strategy_id):
-        data = AttrCh.query.filter_by(id=strategy_id).all( )
+class  Strategy_RecommendAPi(Resource):
+    parser = reqparse.RequestParser()
+    parser.add_argument("user_id",type = int)
+    def get(self):
 
-        result = []
-        for random in data:
-            random_data = {}
-            random_data['pg_id'] = random.pg_id
-            random_data['sg_id'] = random.sg_id
-            random_data['sf_id'] = random.sf_id
-            random_data['pf_id'] = random.pf_id
-            random_data['c_id'] = random.c_id
 
-            result.append(random_data)
 
-        return {'data': result}
-
+class Strategy_ChangeAPi(Resource):
+    def
 
 tactics_api.add_resource(Offense_strategy_IndexAPi,'/off_strategy/<key>')
-tactics_api.add_resource(Offense_StrategyAPi,'/off_strategy/<int:strategy_id>')
 tactics_api.add_resource(Defense_Strategy_IndexAPi,'/def_strategy/<key>')
-tactics_api.add_resource(Defense_StrategyAPi,'/def_strategy/<int:strategy_id>')
+tactics_api.add_resource(Strategy_RecommendAPi,'')
+tactics_api.add_resource(Strategy_ChangeAPi,'')
 

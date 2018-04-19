@@ -3,9 +3,13 @@ from flask import Blueprint
 from flask_restful import Api, Resource,reqparse
 from app import db
 from app.model.tactics import OStrategy,AttrCh, DStrategy
+from app.model.team import BagPlayer,LineUp,SeasonData,PlayerBase
 
 tactics_bp = Blueprint("tactics_bp", __name__)
 tactics_api = Api(tactics_bp)
+
+
+query = db.session.query
 
 OFFENSE_STRATEGY = {
     'strategy_1': {'strategy': '外线投射：通过无球掩护为PG、SG、SF提供外线投篮机会，较为克制内线包夹，' \
@@ -36,29 +40,99 @@ DEFENSE_STRATEGY = {
 
 
 
-
+#进攻战术介绍
 class Offense_strategy_IndexAPi(Resource):
     def get(self, key):
         return OFFENSE_STRATEGY[key]
 
-
+#防守战术介绍
 class Defense_Strategy_IndexAPi(Resource):
     def get(self, key):
         return DEFENSE_STRATEGY[key]
 
+class Score_APi(Resource):
+    def get(self):
+        parser =reqparse.RequestParser()
+        parser.add_argument("user_id", type=int)
+        def get(self):
+            args = self.parser.parse_args()
+            user_id = args['user_id']
+            data = query(LineUp).filter_by(user_id=user_id).all()
+            pg = data.pg
+            sg = data.sg
+            sf = data.sf
+            pf = data.pf
+            c = data.c
+            pg_data = query(BagPlayer).filter_by(id=pg).all()
+            sg_data = query(BagPlayer).filter_by(id=sg).all()
+            sf_data = query(BagPlayer).filter_by(id=sf).all()
+            pf_data = query(BagPlayer).filter_by(id=pf).all()
+            c_data = query(BagPlayer).filter_by(id=c).all()
+            return  pg_data.score+sg_data.score+sf_data.score+pf_data.score+c_data.score
 
+
+
+
+#请一个用户ID下来，通过用户ID访问阵容，利用阵容中的球员ID访问球员的SeasonData
 class  Strategy_RecommendAPi(Resource):
     parser = reqparse.RequestParser()
-    parser.add_argument("user_id",type = int)
+    parser.add_argument("user_id", type=int)
     def get(self):
+        args = self.parser.parse_args()
+        user_id = args['user_id']
+        data = query(LineUp).filter_by(user_id=user_id).all()
+        pg = data.pg
+        sg = data.sg
+        sf = data.sf
+        pf = data.pf
+        c = data.c
+        for each in data:
+            if query(SeasonData).filter_by(player_id=pg).first() or query(SeasonData).filter_by(player_id=sg).first()\
+                    or query(SeasonData).filter_by(player_id=sf).first():
+                random1 = query(SeasonData).filter_by(player_id=pg).all()
+                random2 = query(SeasonData).filter_by(player_id=sg).all()
+                random3 = query(SeasonData).filter_by(player_id=sf).all()
+                if random1.fg_3pt > 0.33 or random2.fg_3pt > 0.33 or random2.fg_3pt > 0.33:
+                    recommend = 2
+                    return recommend
+            elif query(SeasonData).filter_by(player_id=pg).first() or query(SeasonData).filter_by(player_id=sf).first():
+                random1 = query(SeasonData).filter_by(player_id=pg).all()
+                random2 = query(SeasonData).filter_by(player_id=sf).all()
+                if random1.fg_3pt > 0.33 or random2.fg_3pt > 0.33:
+                    recommend = 1
+                    return recommend
+            #elif query(SeasonData).filterby()
 
 
+class OffStrategy_InstallAPi(Resource):
+    parser = reqparse.RequestParser()
+    parser.add_argument("offstrategy_id" ,type=int)
+    def get(self):
+        args = self.parser.parse_args()
+        offstrategy_id = args['offstrategy_id']
+        data = query(OStrategy).filter_by(offstrategy_id=id)
+        if data is not None:
+            return data
 
-class Strategy_ChangeAPi(Resource):
-    def
+class DefStrategy_InstallAPi(Resource):
+    parser = reqparse.RequestParser()
+    parser.add_argument("defstrategy_id" ,type=int)
+    def get(self):
+        args = self.parser.parse_args()
+        defstrategy_id = args['defstrategy_id']
+        data = query(DStrategy).filter_by(defstrategy_id=id)
+        if data is not None:
+            return data
 
 tactics_api.add_resource(Offense_strategy_IndexAPi,'/off_strategy/<key>')
+
 tactics_api.add_resource(Defense_Strategy_IndexAPi,'/def_strategy/<key>')
-tactics_api.add_resource(Strategy_RecommendAPi,'')
-tactics_api.add_resource(Strategy_ChangeAPi,'')
+
+tactics_api.add_resource(Strategy_RecommendAPi,'/strategy_recommend')
+
+tactics_api.add_resource(Score_APi,'/score')
+
+tactics_api.add_resource(OffStrategy_InstallAPi,'/offstrategy_install')
+
+tactics_api.add_resource(DefStrategy_InstallAPi,'/defstrategy_install')
 
